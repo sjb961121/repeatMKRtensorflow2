@@ -1,6 +1,9 @@
+
+
 import tensorflow as tf
 from tensorflow.keras import Model
 from tensorflow.keras.layers import Layer
+
 
 class MLP(Layer):
     def __init__(self,input_dim,output_dim):
@@ -15,6 +18,7 @@ class MLP(Layer):
     def call(self, inputs, **kwargs):
         out = tf.matmul(inputs,self.kernel) + self.bias
         out=tf.nn.relu(out)
+        out=tf.keras.layers.Dropout(0.2)(out)
         return out
 
 

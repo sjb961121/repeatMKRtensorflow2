@@ -1,3 +1,5 @@
+
+
 import tensorflow as tf
 import numpy as np
 from model import MKR
@@ -9,7 +11,7 @@ def train(args, data, show_loss, show_topk):
     kg = data[7]
 
     model = MKR(args, n_user, n_item, n_entity, n_relation)
-
+    model.load_weights('model_weights')
     # top-K evaluation settings
     user_num = 100
     k_list = [1, 2, 5, 10, 20, 50, 100]
@@ -19,6 +21,7 @@ def train(args, data, show_loss, show_topk):
     if len(user_list) > user_num:
         user_list = np.random.choice(user_list, size=user_num, replace=False)
     item_set = set(list(range(n_item)))
+
 
     for step in range(args.n_epochs):
         # RS training
@@ -58,6 +61,8 @@ def train(args, data, show_loss, show_topk):
 
         print('epoch %d    train auc: %.4f  acc: %.4f    eval auc: %.4f  acc: %.4f    test auc: %.4f  acc: %.4f'
               % (step, train_auc, train_acc, eval_auc, eval_acc, test_auc, test_acc))
+
+    model.save_weights('model_weights')
 
 def get_feed_dict_for_rs(data, start, end):
     feed_dict = [data[start:end, 0],
